@@ -1,9 +1,7 @@
-'use client'
-import ShowBookList from "@/components/ShowBookList";
+'use client';
+
 export default function Home() {
 return (
-<main>
-<ShowBookList />
-</main>
+    <h1>Welcome to Speed!</h1>
 );
 }
