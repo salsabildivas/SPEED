@@ -1,28 +1,58 @@
 import { Injectable } from '@nestjs/common';
-import { Book } from './book.schema';
+import { Published_Article } from './published_articles.schema';
+import { Submitted_Article } from './submitted_article.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateBookDto } from './create-book.dto';
+import { CreateSubmittedDto } from './create-submitted-article.dto';
+import { CreateArticleDto } from './create-published-article.dto';
 @Injectable()
-export class BookService {
-  constructor(@InjectModel(Book.name) private bookModel: Model<Book>) {}
+export class SubmittedArticleService {
+  constructor(@InjectModel(Submitted_Article.name) private submittedArticleModel: Model<Submitted_Article>) {}
+  
   test(): string {
     return 'book route testing';
   }
-  async findAll(): Promise<Book[]> {
-    return await this.bookModel.find().exec();
+  async findAll(): Promise<Submitted_Article[]> {
+    return await this.submittedArticleModel.find().exec();
   }
-  async findOne(id: string): Promise<Book> {
-    return await this.bookModel.findById(id).exec();
+  async findOne(id: string): Promise<Submitted_Article> {
+    return await this.submittedArticleModel.findById(id).exec();
   }
-  async create(createBookDto: CreateBookDto) {
-    return await this.bookModel.create(createBookDto);
+  async create(createSubmittedDto: CreateSubmittedDto) {
+    return await this.submittedArticleModel.create(createSubmittedDto);
   }
-  async update(id: string, createBookDto: CreateBookDto) {
-    return await this.bookModel.findByIdAndUpdate(id, createBookDto).exec();
+  async update(id: string, createSubmittedDto: CreateSubmittedDto) {
+    return await this.submittedArticleModel.findByIdAndUpdate(id, createSubmittedDto).exec();
   }
-  async delete(id: string) {
-    const deletedBook = await this.bookModel.findByIdAndDelete(id).exec();
-    return deletedBook;
+  async deleteSubmitted(id: string) {
+    const deletedSubmitted = await this.submittedArticleModel.findByIdAndDelete(id).exec();
+    return deletedSubmitted;
   }
+
+}
+
+@Injectable()
+export class ArticleService {
+  constructor(@InjectModel(Published_Article.name) private articleModel: Model<Published_Article>) {}
+  
+  test(): string {
+    return 'book route testing';
+  }
+  async findAll(): Promise<Published_Article[]> {
+    return await this.articleModel.find().exec();
+  }
+  async findOne(id: string): Promise<Published_Article> {
+    return await this.articleModel.findById(id).exec();
+  }
+  async create(createArticleDto: CreateArticleDto) {
+    return await this.articleModel.create(createArticleDto);
+  }
+  async update(id: string, createArticleDto: CreateArticleDto) {
+    return await this.articleModel.findByIdAndUpdate(id, createArticleDto).exec();
+  }
+  async deleteArticle(id: string) {
+    const deletedArticle = await this.articleModel.findByIdAndDelete(id).exec();
+    return deletedArticle;
+  }
+
 }
