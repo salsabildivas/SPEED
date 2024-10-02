@@ -9,25 +9,25 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { BookService } from './book.service';
-import { CreateBookDto } from './create-book.dto';
+import { ArticleService } from './article.service';
 import { error } from 'console';
-@Controller('api/books')
-export class BookController {
-  constructor(private readonly bookService: BookService) {}
+import { CreateArticleDto } from './create-published-article.dto';
+@Controller('api/articles')
+export class ArticleController {
+  constructor(private readonly articleService: ArticleService) {}
   @Get('/test')
   test() {
-    return this.bookService.test();
-  } // Get all books
+    return this.articleService.test();
+  } // Get all articles
   @Get('/')
   async findAll() {
     try {
-      return this.bookService.findAll();
+      return this.articleService.findAll();
     } catch {
       throw new HttpException(
         {
           status: HttpStatus.NOT_FOUND,
-          error: 'No Books found',
+          error: 'No Articles found',
         },
         HttpStatus.NOT_FOUND,
         { cause: error },
@@ -38,7 +38,7 @@ export class BookController {
   @Get('/:id')
   async findOne(@Param('id') id: string) {
     try {
-      return this.bookService.findOne(id);
+      return this.articleService.findOne(id);
     } catch {
       throw new HttpException(
         {
@@ -52,9 +52,9 @@ export class BookController {
   }
   // Create/add a book
   @Post('/')
-  async addBook(@Body() createBookDto: CreateBookDto) {
+  async addBook(@Body() createArticleDto: CreateArticleDto) {
     try {
-      await this.bookService.create(createBookDto);
+      await this.articleService.create(createArticleDto);
       return { message: 'Book added successfully' };
     } catch {
       throw new HttpException(
@@ -71,10 +71,10 @@ export class BookController {
   @Put('/:id')
   async updateBook(
     @Param('id') id: string,
-    @Body() createBookDto: CreateBookDto,
+    @Body() createArticleDto: CreateArticleDto,
   ) {
     try {
-      await this.bookService.update(id, createBookDto);
+      await this.articleService.update(id, createArticleDto);
       return { message: 'Book updated successfully' };
     } catch {
       throw new HttpException(
@@ -91,7 +91,7 @@ export class BookController {
   @Delete('/:id')
   async deleteBook(@Param('id') id: string) {
     try {
-      return await await this.bookService.delete(id);
+      return await await this.articleService.deleteArticle(id);
     } catch {
       throw new HttpException(
         {
