@@ -9,7 +9,7 @@ import {
     Post,
     Put,
   } from '@nestjs/common';
-  import { SubmittedArticleService} from './article.service';
+  import { SubmittedArticleService } from './submission.service';
   import { CreateSubmittedDto } from './create-submitted-article.dto';
   import { error } from 'console';
   @Controller('api/articles')

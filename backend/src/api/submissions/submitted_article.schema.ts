@@ -25,4 +25,4 @@ export class Submitted_Article {
   @Prop()
   submitter: string;
 }
-export const ArticleSchema = SchemaFactory.createForClass(Submitted_Article);
+export const SubmittedArticleSchema = SchemaFactory.createForClass(Submitted_Article);
