@@ -4,7 +4,6 @@ import internal from 'stream';
 export type PublishedArticleDocument = HydratedDocument<Published_Article>;
 @Schema()
 /*Title, Authors, journal name, publish year, volume, number, pages, DOI, SE practice, claim, stance(for/against), type of research, type of participant    */
-
 export class Published_Article {
   @Prop({ required: true })
   title: string;
@@ -33,4 +32,5 @@ export class Published_Article {
   @Prop()
   type_of_participant: string;
 }
-export const PublishedArticleSchema = SchemaFactory.createForClass(Published_Article);
+export const PublishedArticleSchema =
+  SchemaFactory.createForClass(Published_Article);

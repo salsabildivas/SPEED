@@ -11,7 +11,7 @@ import { ConfigModule } from '@nestjs/config';
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.DB_URI),
     ArticleModule,
-    SubmissionModule
+    SubmissionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

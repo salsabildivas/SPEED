@@ -6,8 +6,11 @@ import { CreateArticleDto } from './create-published-article.dto';
 
 @Injectable()
 export class ArticleService {
-  constructor(@InjectModel(Published_Article.name) private articleModel: Model<Published_Article>) {}
-  
+  constructor(
+    @InjectModel(Published_Article.name)
+    private articleModel: Model<Published_Article>,
+  ) {}
+
   test(): string {
     return 'book route testing';
   }
@@ -21,11 +24,12 @@ export class ArticleService {
     return await this.articleModel.create(createArticleDto);
   }
   async update(id: string, createArticleDto: CreateArticleDto) {
-    return await this.articleModel.findByIdAndUpdate(id, createArticleDto).exec();
+    return await this.articleModel
+      .findByIdAndUpdate(id, createArticleDto)
+      .exec();
   }
   async deleteArticle(id: string) {
     const deletedArticle = await this.articleModel.findByIdAndDelete(id).exec();
     return deletedArticle;
   }
-
 }
