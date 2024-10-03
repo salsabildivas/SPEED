@@ -1,51 +1,73 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, ChangeEvent } from "react";
 import formStyles from "../../styles/Form.module.scss";
+import { SubmittedArticle, DefaultEmptySubmittedArticle } from "@/components/submittedArticle";
+import { useRouter } from "next/router"; // Use Next.js router for navigation
 
 const NewDiscussion = () => {
-  const [title, setTitle] = useState("");
-  const [authors, setAuthors] = useState<string[]>([]);
-  const [source, setSource] = useState("");
-  const [pubYear, setPubYear] = useState<number>(0);
-  const [doi, setDoi] = useState("");
-  const [summary, setSummary] = useState("");
-  const [linkedDiscussion, setLinkedDiscussion] = useState("");
+  const [article, setArticle] = useState<SubmittedArticle>({
+    ...DefaultEmptySubmittedArticle,
+    authors: [""],
+  });
+  const navigate = useRouter();
 
-  const submitNewArticle = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    console.log(
-      JSON.stringify({
-        title,
-        authors,
-        source,
-        publication_year: pubYear,
-        doi,
-        summary,
-        linked_discussion: linkedDiscussion,
-      })
-    );
+  const onChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setArticle({ ...article, [event.target.name]: event.target.value });
   };
 
-
-  // Some helper methods for the authors array
+  const handleAuthorChange = (index: number, value: string) => {
+    const updatedAuthors = [...article.authors];
+    updatedAuthors[index] = value;
+    setArticle({ ...article, authors: updatedAuthors });
+  };
 
   const addAuthor = () => {
-    setAuthors(authors.concat([""]));
+    setArticle({
+      ...article,
+      authors: [...article.authors, ""], 
+    });
   };
 
   const removeAuthor = (index: number) => {
-    setAuthors(authors.filter((_, i) => i !== index));
+    const updatedAuthors = article.authors.filter((_, i) => i !== index);
+    setArticle({ ...article, authors: updatedAuthors });
   };
 
-  const changeAuthor = (index: number, value: string) => {
-    setAuthors(
-      authors.map((oldValue, i) => {
-        return index === i ? value : oldValue;
-      })
-    );
-  };
+  // Submit the form data to the server
+  const submitNewArticle = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+  
+    const articleToSubmit = {
+      title: article.title,
+      author: article.authors.join(", "), // Convert array of authors to string
+      journal_name: article.journal_name,
+      description: article.description,
+      published_year: article.published_year,
+      volume_number: article.volume_number,
+      pages: article.pages,
+      doi: article.doi,
+      status: "pending", // Set status to pending
+      submitter: article.submitter,
+    };
+  
+    console.log("Submitting article...", articleToSubmit);
+    try {
+      const response = await fetch("http://localhost:8085/api/submissions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(articleToSubmit),
+      });
 
-  // Return the full form
+      if (response.ok) {
+        console.log("Article submitted successfully!");
+        setArticle(DefaultEmptySubmittedArticle); // Reset the form
+        navigate.push("/"); // Redirect to the homepage
+      } else {
+        console.error("Failed to submit article");
+      }
+    } catch (error) {
+      console.error("An error occurred while submitting the article:", error);
+    }
+  };
 
   return (
     <div className="container">
@@ -57,69 +79,57 @@ const NewDiscussion = () => {
           type="text"
           name="title"
           id="title"
-          value={title}
-          onChange={(event) => {
-            setTitle(event.target.value);
-          }}
+          value={article.title || ""}
+          onChange={onChange}
+          required
         />
 
-        <label htmlFor="author">Authors:</label>
-        {authors.map((author, index) => {
-          return (
-            <div key={`author ${index}`} className={formStyles.arrayItem}>
-              <input
-                type="text"
-                name="author"
-                value={author}
-                onChange={(event) => changeAuthor(index, event.target.value)}
-                className={formStyles.formItem}
-              />
-              <button
-                onClick={() => removeAuthor(index)}
-                className={formStyles.buttonItem}
-                style={{ marginLeft: "3rem" }}
-                type="button"
-              >
-                -
-              </button>
-            </div>
-          );
-        })}
+        <label>Authors:</label>
+        {article.authors.map((author, index) => (
+          <div key={index} className={formStyles.authorRow}>
+            <input
+              className={formStyles.formItem}
+              type="text"
+              value={author}
+              onChange={(e) => handleAuthorChange(index, e.target.value)}
+              required
+            />
+            <button
+              type="button"
+              className={formStyles.buttonItem}
+              onClick={() => removeAuthor(index)}
+            >
+              -
+            </button>
+          </div>
+        ))}
         <button
-          onClick={() => addAuthor()}
-          className={formStyles.buttonItem}
-          style={{ marginLeft: "auto" }}
           type="button"
+          onClick={addAuthor}
+          className={formStyles.buttonItem}
         >
           +
         </button>
-        <label htmlFor="source">Source:</label>
+
+        <label htmlFor="journal_name">Journal Name:</label>
         <input
           className={formStyles.formItem}
           type="text"
-          name="source"
-          id="source"
-          value={source}
-          onChange={(event) => {
-            setSource(event.target.value);
-          }}
+          name="journal_name"
+          id="journal_name"
+          value={article.journal_name || ""}
+          onChange={onChange}
+          required
         />
 
-        <label htmlFor="pubYear">Publication Year:</label>
+        <label htmlFor="published_year">Publication Year:</label>
         <input
           className={formStyles.formItem}
-          type="number"
-          name="pubYear"
-          id="pubYear"
-          value={pubYear}
-          onChange={(event) => {
-            const val = event.target.value;
-            if (val === "") {
-              setPubYear(0);
-            } else {
-              setPubYear(parseInt(val));
-            }
-          }}
+          type="text"
+          name="published_year"
+          id="published_year"
+          value={article.published_year || ""}
+          onChange={onChange}
         />
 
         <label htmlFor="doi">DOI:</label>
@@ -128,18 +138,16 @@ const NewDiscussion = () => {
           type="text"
           name="doi"
           id="doi"
-          value={doi}
-          onChange={(event) => {
-            setDoi(event.target.value);
-          }}
+          value={article.doi || ""}
+          onChange={onChange}
         />
 
-        <label htmlFor="summary">Summary:</label>
+        <label htmlFor="description">Summary:</label>
         <textarea
           className={formStyles.formTextArea}
-          name="summary"
-          value={summary}
-          onChange={(event) => setSummary(event.target.value)}
+          name="description"
+          value={article.description || ""}
+          onChange={onChange}
         />
 
         <button className={formStyles.formItem} type="submit">
