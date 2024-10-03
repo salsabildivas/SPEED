@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "bibtex-js-parser": "^1.1.6",
+    "bibtex-parse-js": "^0.0.24",
     "next": "14.2.5",
     "next-auth": "^4.24.7",
     "react": "^18",
