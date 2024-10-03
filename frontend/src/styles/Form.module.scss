@@ -28,3 +28,23 @@
   flex-grow: 0;
   font-size: 1.5em;
 }
+
+.errorMessages {
+  background-color: #ffe6e6;
+  border: 1px solid #ff4d4d;
+  color: #d8000c;
+  padding: 1em;
+  margin: 1em 0;
+  border-radius: 0.5em;
+  font-weight: bold;
+}
+
+.errorMessages ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.errorMessages li {
+  margin-bottom: 0.5em;
+}

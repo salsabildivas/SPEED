@@ -8,6 +8,7 @@ const NewDiscussion = () => {
     ...DefaultEmptySubmittedArticle,
     authors: [""],
   });
+  const [errors, setErrors] = useState<string[]>([]); // Store validation errors
   const navigate = useRouter();
 
   const onChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -32,9 +33,44 @@ const NewDiscussion = () => {
     setArticle({ ...article, authors: updatedAuthors });
   };
 
+  // Validation function
+  const validateForm = (): boolean => {
+    const validationErrors: string[] = [];
+
+    if (!article.title?.trim()) {
+      validationErrors.push("Title is required.");
+    }
+
+    if (!article.journal_name?.trim()) {
+      validationErrors.push("Journal name is required.");
+    }
+
+    const validYear = article.published_year && /^[12][0-9]{3}$/.test(article.published_year);
+    if (!validYear) {
+      validationErrors.push("Please provide a valid publication year.");
+    }
+
+    if (article.authors.some(author => !author.trim())) {
+      validationErrors.push("All author fields must be filled.");
+    }
+
+    if (article.doi && !/^(https:\/\/doi\.org\/)?10.\d{4,9}\/[-._;()\/:A-Z0-9]+$/i.test(article.doi)) {
+      validationErrors.push("DOI must be a valid format.");
+    }
+
+    setErrors(validationErrors);
+    return validationErrors.length === 0;
+  };
+
   // Submit the form data to the server
   const submitNewArticle = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    // Call the validation function before submitting
+    if (!validateForm()) {
+      console.log("Form validation failed. Submission prevented.");
+      return; // Prevent submission if validation fails
+    }
   
     const articleToSubmit = {
       title: article.title,
@@ -45,7 +81,7 @@ const NewDiscussion = () => {
       volume_number: article.volume_number,
       pages: article.pages,
       doi: article.doi,
-      status: "pending", // Set status to pending
+      status: "awaiting moderation", // Set status to awaiting moderation
       submitter: article.submitter,
     };
   
@@ -72,6 +108,17 @@ const NewDiscussion = () => {
   return (
     <div className="container">
       <h1>New Article</h1>
+
+      {errors.length > 0 && (
+        <div className={formStyles.errorMessages}>
+          <ul>
+            {errors.map((error, index) => (
+              <li key={index}>{error}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       <form className={formStyles.form} onSubmit={submitNewArticle}>
         <label htmlFor="title">Title:</label>
         <input
@@ -120,6 +167,26 @@ const NewDiscussion = () => {
           value={article.journal_name || ""}
           onChange={onChange}
           required
+        />
+
+        <label htmlFor="volume_number">Volume:</label>
+        <input
+          className={formStyles.formItem}
+          type="text"
+          name="volume_number"
+          id="volume_number"
+          value={article.volume_number || ""}
+          onChange={onChange}
+        />
+
+        <label htmlFor="pages">Pages:</label>
+        <input
+          className={formStyles.formItem}
+          type="number"
+          name="pages"
+          id="pages"
+          value={article.pages || NaN}
+          onChange={onChange}
         />
 
         <label htmlFor="published_year">Publication Year:</label>
