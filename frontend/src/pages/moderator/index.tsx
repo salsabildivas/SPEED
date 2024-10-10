@@ -84,6 +84,43 @@ const ModeratorArticles: NextPage<ArticlesProps> = ({ articles }) => {
         }
     }
 
+    const rejectArticle = async (article: ArticlesInterface) => {
+        try {
+            // Update the article's status to "rejected"
+            const statusUpdateRes = await fetch(`http://localhost:8085/api/submissions/${article.id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ status: "rejected" }),
+            });
+    
+            if (!statusUpdateRes.ok) {
+                const errorData = await statusUpdateRes.json();
+                throw new Error(`Failed to update status: ${errorData.message}`);
+            }
+    
+            // Add the article to the rejected database
+            const response = await fetch("http://localhost:8085/api/rejected", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(article),
+            });
+    
+            if (response.ok) {
+                console.log("Article added to rejected database successfully!");
+            } else {
+                console.error("Failed to add rejected article to database");
+            }
+    
+            // Optimistically update the article list after successful rejection
+            setArticleList((prevArticles) =>
+                prevArticles.map((a) => a.id === article.id ? { ...a, status: "rejected" } : a)
+            );
+    
+        } catch (error) {
+            console.error("An error occurred while rejecting the article:", error);
+        }
+    };
+
     const renderActions = (article: ArticlesInterface) => {
         const isAwaitingModeration = article.status === "awaiting moderation";
 
@@ -97,7 +134,7 @@ const ModeratorArticles: NextPage<ArticlesProps> = ({ articles }) => {
                     Approve
                 </button>
                 <button
-                    onClick={() => updateArticleStatus(article.id, "rejected")}
+                    onClick={() => rejectArticle(article)}
                     disabled={!isAwaitingModeration}
                     className={`action-button reject-button ${!isAwaitingModeration ? 'disabled' : ''}`}
                 >
