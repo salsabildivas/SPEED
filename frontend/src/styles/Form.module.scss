@@ -1,50 +1,56 @@
+.authorRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1em;
+}
+
+.formItem {
+  flex-grow: 1;
+  padding: 0.75em;
+  margin-right: 0.5em;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.buttonItem {
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.5em;
+  border: none;
+  background-color: #4c72af;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.buttonItem:hover {
+  background-color: #4669a1;
+}
+
+.formTextArea {
+  padding: 0.75em;
+  margin-top: 1em;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  min-height: 8em;
+}
+
 .form {
   display: flex;
   flex-direction: column;
   max-width: 30em;
+  margin: 0 auto;
+  padding: 2em;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-
-.formItem {
-  padding: 1em;
-  margin: 1em 0;
-  flex-grow: 1;
-}
-
-.formTextArea {
-  @extend .formItem;
-  min-height: 8em;
-}
-
-.arrayItem {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: stretch;
-}
-
-.buttonItem {
-  width: 3rem;
-  height: 3rem;
-  flex-grow: 0;
-  font-size: 1.5em;
-}
-
-.errorMessages {
-  background-color: #ffe6e6;
-  border: 1px solid #ff4d4d;
-  color: #d8000c;
-  padding: 1em;
-  margin: 1em 0;
-  border-radius: 0.5em;
-  font-weight: bold;
-}
-
-.errorMessages ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.errorMessages li {
-  margin-bottom: 0.5em;
+.submitButton {
+  margin-top: 1em;
+  padding: 0.75em;
+  border: none;
+  background-color: #4c72af;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
 }

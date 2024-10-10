@@ -217,8 +217,8 @@ const NewDiscussion = () => {
           onChange={onChange}
         />
 
-        <button className={formStyles.formItem} type="submit">
-          Submit
+        <button className={formStyles.submitButton} type="submit">
+          Submit New Article 
         </button>
       </form>
     </div>
