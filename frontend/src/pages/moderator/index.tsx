@@ -79,9 +79,6 @@ const ModeratorArticles: NextPage<ArticlesProps> = ({ articles }) => {
                 )
             );
 
-            // Optionally refetch articles to ensure data consistency
-            // await fetchArticles(); // Uncomment this line if you want to refetch the articles
-
         } catch (error) {
             console.error("Error updating status:", error);
         }
