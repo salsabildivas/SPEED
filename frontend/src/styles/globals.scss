@@ -28,3 +28,39 @@
   flex-grow: 0;
   font-size: 1.5em;
 }
+
+.action-button {
+  padding: 5px 5px;
+  border-radius: 12px;
+  border: none;
+  color: black;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100px;
+}
+
+.approve-button {
+  background-color: #5cb85c;
+}
+
+.reject-button {
+  background-color: #d9534f;
+}
+
+.disabled {
+  background-color: grey;
+  cursor: not-allowed;
+}
+
+.action-button:hover:not(.disabled) {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.approve-button:hover:not(.disabled) {
+  background-color: #4cae4c;
+}
+
+.reject-button:hover:not(.disabled) {
+  background-color: #c9302c;
+}

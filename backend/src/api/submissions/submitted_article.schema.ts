@@ -1,10 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Date, HydratedDocument } from 'mongoose';
-import internal from 'stream';
+import { HydratedDocument } from 'mongoose';
 export type ArticleDocument = HydratedDocument<Submitted_Article>;
 @Schema()
-/*Title, authors, journal name, year of publication, volume, number, pages, DOI, status   */
-
+/*Title, authors, journal name, year of publication, volume, number of pages, DOI, status   */
 export class Submitted_Article {
   @Prop({ required: true })
   title: string;
@@ -20,9 +18,12 @@ export class Submitted_Article {
   volume_number: string;
   @Prop()
   pages: number;
+  @Prop()
+  doi: string;
   @Prop({ required: true })
   status: string;
   @Prop()
   submitter: string;
 }
-export const SubmittedArticleSchema = SchemaFactory.createForClass(Submitted_Article);
+export const SubmittedArticleSchema =
+  SchemaFactory.createForClass(Submitted_Article);
