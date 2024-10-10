@@ -68,16 +68,20 @@ const ModeratorArticles: NextPage<ArticlesProps> = ({ articles }) => {
             });
 
             if (!res.ok) {
-                const errorData = await res.json(); // Get error response for debugging
+                const errorData = await res.json();
                 throw new Error(`Failed to update status: ${errorData.message}`);
             }
 
-            // Update the article list after successful status update
+            // Optimistically update the article list after successful status update
             setArticleList((prevArticles) =>
                 prevArticles.map((article) =>
                     article.id === id ? { ...article, status: newStatus } : article
                 )
             );
+
+            // Optionally refetch articles to ensure data consistency
+            // await fetchArticles(); // Uncomment this line if you want to refetch the articles
+
         } catch (error) {
             console.error("Error updating status:", error);
         }
@@ -89,20 +93,14 @@ const ModeratorArticles: NextPage<ArticlesProps> = ({ articles }) => {
         return (
             <div style={{ display: 'flex', gap: '10px' }}>
                 <button
-                    onClick={() => {
-                        console.log(`Approving article ID: ${article.id}`); // Debugging log
-                        updateArticleStatus(article.id, "awaiting analysis");
-                    }}
+                    onClick={() => updateArticleStatus(article.id, "awaiting analysis")}
                     disabled={!isAwaitingModeration}
                     className={`action-button approve-button ${!isAwaitingModeration ? 'disabled' : ''}`}
                 >
                     Approve
                 </button>
                 <button
-                    onClick={() => {
-                        console.log(`Rejecting article ID: ${article.id}`); // Debugging log
-                        updateArticleStatus(article.id, "rejected");
-                    }}
+                    onClick={() => updateArticleStatus(article.id, "rejected")}
                     disabled={!isAwaitingModeration}
                     className={`action-button reject-button ${!isAwaitingModeration ? 'disabled' : ''}`}
                 >
@@ -134,8 +132,6 @@ export const getStaticProps: GetStaticProps<ArticlesProps> = async () => {
             throw new Error("Failed to fetch articles");
         }
         const data = await res.json();
-
-        // Map the data
         articles = data.map((article: any) => ({
             id: article._id,
             title: article.title,
