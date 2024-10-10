@@ -25,7 +25,7 @@ export class SubmittedArticleService {
   }
   async update(id: string, createSubmittedDto: CreateSubmittedDto) {
     return await this.submittedArticleModel
-      .findByIdAndUpdate(id, createSubmittedDto)
+      .findByIdAndUpdate(id, createSubmittedDto, { new: true })
       .exec();
   }
   async deleteSubmitted(id: string) {
