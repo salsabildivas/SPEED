@@ -93,7 +93,7 @@ const ModeratorArticles: NextPage<ArticlesProps> = ({ articles }) => {
         return (
             <div style={{ display: 'flex', gap: '10px' }}>
                 <button
-                    onClick={() => updateArticleStatus(article.id, "awaiting analysis")}
+                    onClick={() => updateArticleStatus(article.id, "pending analysis")}
                     disabled={!isAwaitingModeration}
                     className={`action-button approve-button ${!isAwaitingModeration ? 'disabled' : ''}`}
                 >
