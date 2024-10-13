@@ -1,5 +1,5 @@
 import { GetStaticProps, NextPage } from "next";
-import SortableTable from "../../components/table/SortableTable";
+import ArticleTable from "@/components/table/articleTable";
 
 interface ArticlesInterface {
   id: string;
@@ -24,6 +24,7 @@ type ArticlesProps = {
 
 const Articles: NextPage<ArticlesProps> = ({ articles }) => {
   const headers: { key: keyof ArticlesInterface; label: string }[] = [
+    //{ key: "id", label: "id" },
     { key: "title", label: "Title" },
     { key: "author", label: "Author" },
     { key: "journal_name", label: "Journal Name"},
@@ -43,7 +44,7 @@ const Articles: NextPage<ArticlesProps> = ({ articles }) => {
     <div className="container">
       <h1>Articles Index Page</h1>
       <p>Page containing a table of articles:</p>
-      <SortableTable headers={headers} data={articles} />
+      <ArticleTable headers={headers} data={articles} />
     </div>
   );
 };
@@ -76,6 +77,7 @@ export const getStaticProps: GetStaticProps<ArticlesProps> = async () => {
       type_of_research: article.type_of_research,
       type_of_participant: article.type_of_participant,
     }));
+    
   } catch (error) {
     console.error("Error fetching articles:", error);
   }
