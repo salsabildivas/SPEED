@@ -10,7 +10,7 @@ interface ArticlesInterface {
   volume_number: string;
   pages: number;
   publisher: string;
-  DOI: string;
+  doi: string;
   SE_practice: string;
   claim: string;
   evidence: string;
@@ -32,7 +32,7 @@ const Articles: NextPage<ArticlesProps> = ({ articles }) => {
     //{ key: "volume_number", label: "Volume Number"},
     //{ key: "pages", label: "Total pages"},
     //{ key: "publisher", label: "Publisher"},
-    //{ key: "DOI", label:"DOI"},
+    //{ key: "doi", label:"doi"},
     { key: "SE_practice", label:"Software Engineering Practice"},
     { key:"claim", label:"Claim"},
     { key:"evidence", label:"Evidence"},
@@ -70,7 +70,7 @@ export const getStaticProps: GetStaticProps<ArticlesProps> = async () => {
       volume_number: article.volume_number,
       pages: article.pages,
       publisher: article.publisher,
-      DOI: article.doi,
+      doi: article.doi,
       SE_practice: article.SE_practice,
       claim: article.claim,
       evidence: article.evidence,

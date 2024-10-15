@@ -58,7 +58,7 @@ function ShowArticleDetails() {
           <tr>
             <th scope="row">7</th>
             <td>DOI</td>
-            <td>{article.DOI}</td>
+            <td>{article.doi}</td>
           </tr>
           <tr>
             <th scope="row">8</th>
