@@ -96,21 +96,19 @@ function ShowArticleDetails() {
         <div className="row">
           <div className="col-md-10 m-auto">
             <br /> <br />
-            <Link href="/" className="btn btn-outline-warning float-left">
-              Show Book List
+            <Link href="/articles" className="btn btn-outline-warning float-left">
+              Return
             </Link>
           </div>
           <br />
           <div className="col-md-8 m-auto">
             <h1 className="display-4 text-center">Article&quot;s Record</h1>
-            <p className="lead text-center">View Article&quot;s Info</p>
+            <p className="lead text-center">Article's Rating</p>
+            <div className="col-md-10 m-auto">"Rating"</div>
             <hr /> <br />
           </div>
           <div className="col-md-10 m-auto">{BookItem}</div>
           <div className="col-md-6 m-auto">
-          </div>
-          <div className="col-md-6 m-auto">
-              Rating
           </div>
         </div>
       </div>
