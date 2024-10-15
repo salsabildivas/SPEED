@@ -7,7 +7,7 @@ export type PublishedArticle = {
     volume_number: string;
     pages: number;
     publisher: string;
-    DOI: string;
+    doi: string;
     SE_practice: string;
     claim: string;
     evidence: string;
@@ -24,7 +24,7 @@ export type PublishedArticle = {
     volume_number: "",
     pages: 0,
     publisher: "",
-    DOI: "",
+    doi: "",
     SE_practice: "",
     claim: "",
     evidence: "",
