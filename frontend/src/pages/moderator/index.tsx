@@ -20,6 +20,8 @@ type ArticlesProps = {
 
 const ModeratorArticles: NextPage<ArticlesProps> = ({ articles }) => {
     const [articleList, setArticleList] = useState<ArticlesInterface[]>(articles);
+    const [currentPage, setCurrentPage] = useState(1);
+    const articlesPerPage = 10;
 
     useEffect(() => {
         const fetchArticles = async () => {
@@ -29,7 +31,8 @@ const ModeratorArticles: NextPage<ArticlesProps> = ({ articles }) => {
                     throw new Error("Failed to fetch articles");
                 }
                 const data = await res.json();
-                setArticleList(data.map((article: any) => ({
+                const sortedData = data
+                .map((article: any) => ({
                     id: article._id,
                     title: article.title,
                     author: article.author,
@@ -38,7 +41,19 @@ const ModeratorArticles: NextPage<ArticlesProps> = ({ articles }) => {
                     doi: article.doi,
                     description: article.description,
                     status: article.status,
-                })));
+                }))
+                .sort((a: ArticlesInterface, b: ArticlesInterface) => {
+                    // Sort by "awaiting moderation" status first
+                    if (a.status === "awaiting moderation" && b.status !== "awaiting moderation") {
+                        return -1;
+                    }
+                    if (a.status !== "awaiting moderation" && b.status === "awaiting moderation") {
+                        return 1;
+                    }
+                    return 0;
+                });
+
+                setArticleList(sortedData);
             } catch (error) {
                 console.error("Error fetching articles:", error);
             }
@@ -144,14 +159,49 @@ const ModeratorArticles: NextPage<ArticlesProps> = ({ articles }) => {
         );
     };
 
+    // Pagination logic
+    const indexOfLastArticle = currentPage * articlesPerPage;
+    const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
+    const currentArticles = articleList.slice(indexOfFirstArticle, indexOfLastArticle);
+
+    const totalPages = Math.ceil(articleList.length / articlesPerPage);
+
+    const handleNextPage = () => {
+        if (currentPage < totalPages) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
+
+    const handlePreviousPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+
     return (
         <div className="container">
-            <h1>Moderator Articles Index Page</h1>
-            <p>Page containing a table of articles:</p>
+            <h1>Moderator Articles Page</h1>
             <SortableTable headers={headers} data={articleList.map((article) => ({
                 ...article,
                 actions: renderActions(article),
             }))} />
+            <div className="pagination-container">
+                <button 
+                    onClick={handlePreviousPage} 
+                    disabled={currentPage === 1} 
+                    className="pagination-button"
+                >
+                    Previous
+                </button>
+                <span className="pagination-info">Page {currentPage} of {totalPages}</span>
+                <button 
+                    onClick={handleNextPage} 
+                    disabled={currentPage === totalPages} 
+                    className="pagination-button"
+                >
+                    Next
+                </button>
+            </div>
         </div>
     );
 };
