@@ -11,7 +11,7 @@ const SortableTable: React.FC<SortableTableProps> = ({ headers, data }) => {
     const [sortConfig, setSortConfig] = useState<{ key: string; direction: boolean } | null>(null);
 
     useEffect(() => {
-        setSortedData(data); // Update sortedData when data prop changes
+        setSortedData(data);
     }, [data]);
 
     const handleSort = (key: string) => {
@@ -19,7 +19,7 @@ const SortableTable: React.FC<SortableTableProps> = ({ headers, data }) => {
         if (sortConfig && sortConfig.key === key) {
             direction = !sortConfig.direction;
         }
-        const sorted = sortData([...sortedData], key, direction); // sortData should handle the sorting logic
+        const sorted = sortData([...sortedData], key, direction);
         setSortedData(sorted);
         setSortConfig({ key, direction });
     };
@@ -27,23 +27,27 @@ const SortableTable: React.FC<SortableTableProps> = ({ headers, data }) => {
     return (
         <table>
             <thead>
-                <tr>
-                    {headers.map((header) => (
-                        <th key={header.key} onClick={() => handleSort(header.key)}>
-                            {header.label}
-                            {sortConfig?.key === header.key ? (sortConfig.direction ? " ▲" : " ▼") : ""}
-                        </th>
-                    ))}
-                </tr>
+            <tr>
+                {headers.map((header) => (
+                    <th key={header.key} onClick={() => handleSort(header.key)}>
+                        {header.label}
+                        {sortConfig?.key === header.key ? (sortConfig.direction ? " ▲" : " ▼") : ""}
+                    </th>
+                ))}
+            </tr>
             </thead>
             <tbody>
-                {sortedData.map((row, i) => (
-                    <tr key={i}>
-                        {headers.map((header) => (
-                            <td key={header.key}>{row[header.key]}</td>
-                        ))}
-                    </tr>
-                ))}
+            {sortedData.map((row, i) => (
+                <tr key={i}>
+                    {headers.map((header) => (
+                        <td key={header.key}>
+
+                            {header.key === "actions" ? null : row[header.key]}
+                        </td>
+                    ))}
+                    <td>{row.actions}</td>
+                </tr>
+            ))}
             </tbody>
         </table>
     );

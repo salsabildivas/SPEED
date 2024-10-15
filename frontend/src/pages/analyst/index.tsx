@@ -1,6 +1,7 @@
 import { GetStaticProps, NextPage } from "next";
 import { useState, useEffect } from "react";
 import SortableTable from "../../components/table/SortableTable";
+import Modal from 'react-modal';
 
 interface ArticlesInterface {
     id: string;
@@ -8,12 +9,19 @@ interface ArticlesInterface {
     author: string;
     journal_name: string;
     published_year: string;
-    doi: string;
-    description: string;
+    volume_number: string;
+    pages: number;
+    publisher: string;
+    DOI: string;
+    SE_practice: string;
     claim: string;
-    research_type: string;
-    participant: string;
-    practice: string;
+    evidence: string;
+    type_of_research: string;
+    type_of_participant: string;
+}
+
+interface ArticleWithActions extends ArticlesInterface {
+    actions: JSX.Element;
 }
 
 type ArticlesProps = {
@@ -22,6 +30,13 @@ type ArticlesProps = {
 
 const AnalystArticles: NextPage<ArticlesProps> = ({ articles }) => {
     const [articleList, setArticleList] = useState<ArticlesInterface[]>(articles);
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [selectedArticle, setSelectedArticle] = useState<ArticlesInterface | null>(null);
+    const [claim, setClaim] = useState('');
+    const [SE_practice, setSEPractice] = useState('');
+    const [evidence, setEvidence] = useState('');
+    const [type_of_research, setTypeOfResearch] = useState('');
+    const [type_of_participant, setTypeOfParticipant] = useState('');
 
     useEffect(() => {
         const fetchArticles = async () => {
@@ -37,12 +52,15 @@ const AnalystArticles: NextPage<ArticlesProps> = ({ articles }) => {
                     author: article.author,
                     journal_name: article.journal_name,
                     published_year: article.published_year,
-                    doi: article.doi,
-                    description: article.description,
+                    volume_number: article.volume_number,
+                    pages: article.pages,
+                    publisher: article.publisher,
+                    DOI: article.DOI,
+                    SE_practice: article.SE_practice || "",
                     claim: article.claim || "",
-                    research_type: article.research_type || "",
-                    participant: article.participant || "",
-                    practice: article.practice || "",
+                    evidence: article.evidence || "",
+                    type_of_research: article.type_of_research || "",
+                    type_of_participant: article.type_of_participant || "",
                 })));
             } catch (error) {
                 console.error("Error fetching articles:", error);
@@ -52,26 +70,51 @@ const AnalystArticles: NextPage<ArticlesProps> = ({ articles }) => {
         fetchArticles();
     }, []);
 
-    const headers: { key: keyof ArticlesInterface; label: string }[] = [
+    const headers: { key: keyof ArticleWithActions; label: string }[] = [
         { key: "title", label: "Title" },
         { key: "author", label: "Author" },
         { key: "journal_name", label: "Journal" },
         { key: "published_year", label: "Publication Year" },
-        { key: "doi", label: "DOI" },
-        { key: "claim", label: "Claim Strength" },
-        { key: "research_type", label: "Research Type" },
-        { key: "participant", label: "Participant Type" },
-        { key: "practice", label: "Engineering Practice" },
+        { key: "volume_number", label: "Volume" },
+        { key: "pages", label: "Pages" },
+        { key: "DOI", label: "DOI" },
+        { key: "actions", label: "Actions" },
     ];
 
-    const updateArticleAttributes = async (id: string, newAttributes: Partial<ArticlesInterface>) => {
+    const openModal = (article: ArticlesInterface) => {
+        setSelectedArticle(article);
+        setClaim(article.claim);
+        setSEPractice(article.SE_practice);
+        setEvidence(article.evidence);
+        setTypeOfResearch(article.type_of_research);
+        setTypeOfParticipant(article.type_of_participant);
+        setModalIsOpen(true);
+    };
+
+    const closeModal = () => {
+        setModalIsOpen(false);
+        setSelectedArticle(null);
+    };
+
+    const handleSubmit = async () => {
+        if (!selectedArticle) return;
+
+        const updatedArticle = {
+            ...selectedArticle,
+            claim,
+            SE_practice,
+            evidence,
+            type_of_research,
+            type_of_participant,
+        };
+
         try {
-            const res = await fetch(`http://localhost:8085/api/submissions/${id}`, {
+            const res = await fetch(`http://localhost:8085/api/submissions/${selectedArticle.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(newAttributes),
+                body: JSON.stringify(updatedArticle),
             });
 
             if (!res.ok) {
@@ -81,75 +124,24 @@ const AnalystArticles: NextPage<ArticlesProps> = ({ articles }) => {
 
             setArticleList((prevArticles) =>
                 prevArticles.map((article) =>
-                    article.id === id ? { ...article, ...newAttributes } : article
+                    article.id === selectedArticle.id ? updatedArticle : article
                 )
             );
+
+            closeModal();
         } catch (error) {
-            console.error("Error updating article attributes:", error);
+            console.error("Error updating article:", error);
         }
     };
 
     const renderActions = (article: ArticlesInterface) => (
-        <div>
-            <div>
-                <label>Claim Strength:</label>
-                <select
-                    value={article.claim}
-                    onChange={(e) => updateArticleAttributes(article.id, { claim: e.target.value })}
-                >
-                    <option value="">Select Claim Strength</option>
-                    <option value="strong">Strong</option>
-                    <option value="weak">Weak</option>
-                </select>
-            </div>
-
-            <div>
-                <label>Research Type:</label>
-                <select
-                    value={article.research_type}
-                    onChange={(e) => updateArticleAttributes(article.id, { research_type: e.target.value })}
-                >
-                    <option value="">Select Research Type</option>
-                    <option value="empirical">Empirical</option>
-                    <option value="theoretical">Theoretical</option>
-                    <option value="case_study">Case Study</option>
-                    <option value="experiment">Experiment</option>
-                </select>
-            </div>
-
-            <div>
-                <label>Participant Type:</label>
-                <select
-                    value={article.participant}
-                    onChange={(e) => updateArticleAttributes(article.id, { participant: e.target.value })}
-                >
-                    <option value="">Select Participant Type</option>
-                    <option value="students">Students</option>
-                    <option value="professionals">Professionals</option>
-                    <option value="general_public">General Public</option>
-                </select>
-            </div>
-
-            <div>
-                <label>Engineering Practice:</label>
-                <select
-                    value={article.practice}
-                    onChange={(e) => updateArticleAttributes(article.id, { practice: e.target.value })}
-                >
-                    <option value="">Select Engineering Practice</option>
-                    <option value="agile">Agile</option>
-                    <option value="waterfall">Waterfall</option>
-                    <option value="scrum">Scrum</option>
-                    <option value="kanban">Kanban</option>
-                </select>
-            </div>
-        </div>
+        <button onClick={() => openModal(article)}>Review & Publish</button>
     );
 
     return (
         <div className="container">
             <h1>Analyst View</h1>
-            <p>Page containing a table of articles for analyst review:</p>
+            <p>Please review each article correctly and concisely:</p>
             <SortableTable
                 headers={headers}
                 data={articleList.map((article) => ({
@@ -157,11 +149,60 @@ const AnalystArticles: NextPage<ArticlesProps> = ({ articles }) => {
                     actions: renderActions(article),
                 }))}
             />
+
+            <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={closeModal}
+                contentLabel="Review Article"
+            >
+                <h2>Review & Publish</h2>
+                <div>
+                    <label>Claim:</label>
+                    <input
+                        type="text"
+                        value={claim}
+                        onChange={(e) => setClaim(e.target.value)}
+                    />
+                </div>
+                <div>
+                    <label>Engineering Practice:</label>
+                    <input
+                        type="text"
+                        value={SE_practice}
+                        onChange={(e) => setSEPractice(e.target.value)}
+                    />
+                </div>
+                <div>
+                    <label>Evidence:</label>
+                    <input
+                        type="text"
+                        value={evidence}
+                        onChange={(e) => setEvidence(e.target.value)}
+                    />
+                </div>
+                <div>
+                    <label>Type of Research:</label>
+                    <input
+                        type="text"
+                        value={type_of_research}
+                        onChange={(e) => setTypeOfResearch(e.target.value)}
+                    />
+                </div>
+                <div>
+                    <label>Type of Participant:</label>
+                    <input
+                        type="text"
+                        value={type_of_participant}
+                        onChange={(e) => setTypeOfParticipant(e.target.value)}
+                    />
+                </div>
+                <button onClick={handleSubmit}>Submit</button>
+                <button onClick={closeModal}>Cancel</button>
+            </Modal>
         </div>
     );
 };
 
-// Fetch data from the backend API
 export const getStaticProps: GetStaticProps<ArticlesProps> = async () => {
     let articles: ArticlesInterface[] = [];
 
@@ -173,16 +214,19 @@ export const getStaticProps: GetStaticProps<ArticlesProps> = async () => {
         const data = await res.json();
         articles = data.map((article: any) => ({
             id: article._id,
-            title: article.title,
-            author: article.author,
-            journal_name: article.journal_name,
-            published_year: article.published_year,
-            doi: article.doi,
-            description: article.description,
+            title: article.title || "",
+            author: article.author || "",
+            journal_name: article.journal_name || "",
+            published_year: article.published_year || "",
+            volume_number: article.volume_number || "",
+            pages: article.pages !== undefined ? article.pages : null,
+            publisher: article.publisher || "",
+            DOI: article.DOI || "",
+            SE_practice: article.SE_practice || "",
             claim: article.claim || "",
-            research_type: article.research_type || "",
-            participant: article.participant || "",
-            practice: article.practice || "",
+            evidence: article.evidence || "",
+            type_of_research: article.type_of_research || "",
+            type_of_participant: article.type_of_participant || "",
         }));
     } catch (error) {
         console.error("Error fetching articles:", error);
