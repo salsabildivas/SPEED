@@ -181,10 +181,13 @@ const ModeratorArticles: NextPage<ArticlesProps> = ({ articles }) => {
     return (
         <div className="container">
             <h1>Moderator Articles Page</h1>
-            <SortableTable headers={headers} data={articleList.map((article) => ({
-                ...article,
-                actions: renderActions(article),
-            }))} />
+            <SortableTable 
+                headers={headers} 
+                data={currentArticles.map((article) => ({
+                    ...article,
+                    actions: renderActions(article),
+                }))}
+            />
             <div className="pagination-container">
                 <button 
                     onClick={handlePreviousPage} 
