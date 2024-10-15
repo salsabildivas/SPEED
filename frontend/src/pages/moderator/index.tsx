@@ -3,22 +3,26 @@ import { useState, useEffect } from "react";
 import SortableTable from "../../components/table/SortableTable";
 
 interface ArticlesInterface {
-    id: string; 
+    id: string;
     title: string;
-    author: string; 
-    journal_name: string; 
-    published_year: string; 
+    author: string;
+    journal_name: string;
+    published_year: string;
     doi: string;
-    description: string; 
-    status: string; 
+    description: string;
+    status: string;
     actions: string;
+    claim: string;
+    research_type: string;
+    participant_type: string;
+    software_practice: string;
 }
 
 type ArticlesProps = {
     articles: ArticlesInterface[];
 };
 
-const ModeratorArticles: NextPage<ArticlesProps> = ({ articles }) => {
+const AnalystArticles: NextPage<ArticlesProps> = ({ articles }) => {
     const [articleList, setArticleList] = useState<ArticlesInterface[]>(articles);
 
     useEffect(() => {
@@ -29,7 +33,11 @@ const ModeratorArticles: NextPage<ArticlesProps> = ({ articles }) => {
                     throw new Error("Failed to fetch articles");
                 }
                 const data = await res.json();
-                setArticleList(data.map((article: any) => ({
+                // Filter articles based on status being 'pending' or 'accepted'
+                const filteredData = data.filter((article: any) =>
+                    article.status === "pending" || article.status === "accepted"
+                );
+                setArticleList(filteredData.map((article: any) => ({
                     id: article._id,
                     title: article.title,
                     author: article.author,
@@ -38,6 +46,10 @@ const ModeratorArticles: NextPage<ArticlesProps> = ({ articles }) => {
                     doi: article.doi,
                     description: article.description,
                     status: article.status,
+                    claim: article.claim,
+                    research_type: article.research_type,
+                    participant_type: article.participant_type,
+                    software_practice: article.software_practice,
                 })));
             } catch (error) {
                 console.error("Error fetching articles:", error);
@@ -53,66 +65,63 @@ const ModeratorArticles: NextPage<ArticlesProps> = ({ articles }) => {
         { key: "journal_name", label: "Journal" },
         { key: "published_year", label: "Publication Year" },
         { key: "doi", label: "DOI" },
-        { key: "status", label: "Status"},
+        { key: "status", label: "Status" },
+        { key: "claim", label: "Claim" },
+        { key: "research_type", label: "Research Type" },
+        { key: "participant_type", label: "Participant Type" },
+        { key: "software_practice", label: "Software Practice" },
         { key: "actions", label: "Actions" },
     ];
 
-    const updateArticleStatus = async (id: string, newStatus: string) => {
+    const updateArticleDetails = async (id: string, details: any) => {
         try {
             const res = await fetch(`http://localhost:8085/api/submissions/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ status: newStatus }),
+                body: JSON.stringify(details),
             });
 
             if (!res.ok) {
                 const errorData = await res.json();
-                throw new Error(`Failed to update status: ${errorData.message}`);
+                throw new Error(`Failed to update article: ${errorData.message}`);
             }
 
-            // Optimistically update the article list after successful status update
+            // Update the article list with the updated details
             setArticleList((prevArticles) =>
                 prevArticles.map((article) =>
-                    article.id === id ? { ...article, status: newStatus } : article
+                    article.id === id ? { ...article, ...details } : article
                 )
             );
-
-            // Optionally refetch articles to ensure data consistency
-            // await fetchArticles(); // Uncomment this line if you want to refetch the articles
-
         } catch (error) {
-            console.error("Error updating status:", error);
+            console.error("Error updating article details:", error);
         }
-    }
+    };
 
     const renderActions = (article: ArticlesInterface) => {
-        const isAwaitingModeration = article.status === "awaiting moderation";
-
         return (
             <div style={{ display: 'flex', gap: '10px' }}>
                 <button
-                    onClick={() => updateArticleStatus(article.id, "awaiting analysis")}
-                    disabled={!isAwaitingModeration}
-                    className={`action-button approve-button ${!isAwaitingModeration ? 'disabled' : ''}`}
+                    onClick={() => updateArticleDetails(article.id, { claim: "strong" })}
+                    className="action-button"
                 >
-                    Approve
+                    Set Strong Claim
                 </button>
                 <button
-                    onClick={() => updateArticleStatus(article.id, "rejected")}
-                    disabled={!isAwaitingModeration}
-                    className={`action-button reject-button ${!isAwaitingModeration ? 'disabled' : ''}`}
+                    onClick={() => updateArticleDetails(article.id, { claim: "weak" })}
+                    className="action-button"
                 >
-                    Reject
+                    Set Weak Claim
                 </button>
+                {/* Add more fields for Research Type, Participant, etc. */}
             </div>
         );
     };
 
     return (
         <div className="container">
-            <h1>Moderator Articles Index Page</h1>
+            <h1>Analyst Articles Index Page</h1>
             <p>Page containing a table of articles:</p>
             <SortableTable headers={headers} data={articleList.map((article) => ({
                 ...article,
@@ -132,7 +141,11 @@ export const getStaticProps: GetStaticProps<ArticlesProps> = async () => {
             throw new Error("Failed to fetch articles");
         }
         const data = await res.json();
-        articles = data.map((article: any) => ({
+        // Filter articles for only "pending" or "accepted" status
+        const filteredData = data.filter((article: any) =>
+            article.status === "pending" || article.status === "accepted"
+        );
+        articles = filteredData.map((article: any) => ({
             id: article._id,
             title: article.title,
             author: article.author,
@@ -141,6 +154,10 @@ export const getStaticProps: GetStaticProps<ArticlesProps> = async () => {
             doi: article.doi,
             description: article.description,
             status: article.status,
+            claim: article.claim,
+            research_type: article.research_type,
+            participant_type: article.participant_type,
+            software_practice: article.software_practice,
         }));
     } catch (error) {
         console.error("Error fetching articles:", error);
@@ -153,4 +170,4 @@ export const getStaticProps: GetStaticProps<ArticlesProps> = async () => {
     };
 };
 
-export default ModeratorArticles;
+export default AnalystArticles;
