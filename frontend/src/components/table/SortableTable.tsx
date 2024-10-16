@@ -29,7 +29,14 @@ const SortableTable: React.FC<SortableTableProps> = ({ headers, data }) => {
             <thead>
             <tr>
                 {headers.map((header) => (
-                    <th key={header.key} onClick={() => handleSort(header.key)}>
+                    <th
+                        key={header.key}
+                        onClick={() => handleSort(header.key)}
+                        style={{
+                            cursor: 'pointer',
+                            textAlign: header.key === "actions" ? "center" : "left"
+                        }}
+                    >
                         {header.label}
                         {sortConfig?.key === header.key ? (sortConfig.direction ? " ▲" : " ▼") : ""}
                     </th>
@@ -40,12 +47,15 @@ const SortableTable: React.FC<SortableTableProps> = ({ headers, data }) => {
             {sortedData.map((row, i) => (
                 <tr key={i}>
                     {headers.map((header) => (
-                        <td key={header.key}>
-
-                            {header.key === "actions" ? null : row[header.key]}
+                        <td
+                            key={header.key}
+                            style={{
+                                textAlign: header.key === "actions" ? "center" : "left"
+                            }}
+                        >
+                            {header.key === "actions" ? row.actions : row[header.key]}
                         </td>
                     ))}
-                    <td>{row.actions}</td>
                 </tr>
             ))}
             </tbody>

@@ -77,7 +77,7 @@ const PublishArticles: NextPage<ArticlesProps> = ({ articles }) => {
             }
         };
 
-        fetchArticles();
+        fetchArticles()
     }, []);
 
     const headers: { key: keyof ArticleWithActions; label: string }[] = [
@@ -183,114 +183,251 @@ const PublishArticles: NextPage<ArticlesProps> = ({ articles }) => {
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
                 contentLabel="Review Article"
+                style={{
+                    content: {
+                        top: '50%',
+                        left: '50%',
+                        right: 'auto',
+                        bottom: 'auto',
+                        transform: 'translate(-50%, -50%)',
+                        width: '100%',
+                        maxWidth: '1200px',  // Adjust width as necessary
+                        padding: '20px',
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+                        background: '#ffffff',
+                        overflowY: 'auto',
+                        maxHeight: '67vh',
+                        height: '100%',
+                    },
+                    overlay: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.75)',
+                    },
+                }}
             >
-                <h2>Review & Publish</h2>
-                <div>
-                    <label>Title:</label>
-                    <input
-                        type="text"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                    />
+                <h2 style={{ marginBottom: '20px', textAlign: 'center' }}>Review & Publish</h2>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px' }}>
+                    <div style={{ flex: '1 1 45%' }}>
+                        <label style={{ display: 'block', marginBottom: '5px' }}>Title:</label>
+                        <input
+                            type="text"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            style={{
+                                width: '100%',
+                                padding: '10px',
+                                border: '1px solid #ccc',
+                                borderRadius: '4px',
+                                boxSizing: 'border-box',
+                            }}
+                        />
+                        <label style={{ display: 'block', marginBottom: '5px' }}>Author:</label>
+                        <input
+                            type="text"
+                            value={author}
+                            onChange={(e) => setAuthor(e.target.value)}
+                            style={{
+                                width: '100%',
+                                padding: '10px',
+                                border: '1px solid #ccc',
+                                borderRadius: '4px',
+                                boxSizing: 'border-box',
+                            }}
+                        />
+                        <label style={{ display: 'block', marginBottom: '5px' }}>Journal Name:</label>
+                        <input
+                            type="text"
+                            value={journal_name}
+                            onChange={(e) => setJournalName(e.target.value)}
+                            style={{
+                                width: '100%',
+                                padding: '10px',
+                                border: '1px solid #ccc',
+                                borderRadius: '4px',
+                                boxSizing: 'border-box',
+                            }}
+                        />
+                        <label style={{ display: 'block', marginBottom: '5px' }}>Publication Year:</label>
+                        <input
+                            type="text"
+                            value={published_year}
+                            onChange={(e) => setPublishedYear(e.target.value)}
+                            style={{
+                                width: '100%',
+                                padding: '10px',
+                                border: '1px solid #ccc',
+                                borderRadius: '4px',
+                                boxSizing: 'border-box',
+                            }}
+                        />
+                    </div>
+
+                    <div style={{ flex: '1 1 45%' }}>
+                        <label style={{ display: 'block', marginBottom: '5px' }}>Volume Number:</label>
+                        <input
+                            type="text"
+                            value={volume_number}
+                            onChange={(e) => setVolumeNumber(e.target.value)}
+                            style={{
+                                width: '100%',
+                                padding: '10px',
+                                border: '1px solid #ccc',
+                                borderRadius: '4px',
+                                boxSizing: 'border-box',
+                            }}
+                        />
+                        <label style={{ display: 'block', marginBottom: '5px' }}>Pages:</label>
+                        <input
+                            type="number"
+                            value={pages ?? ""}
+                            onChange={(e) => setPages(e.target.value ? Number(e.target.value) : null)}
+                            style={{
+                                width: '100%',
+                                padding: '10px',
+                                border: '1px solid #ccc',
+                                borderRadius: '4px',
+                                boxSizing: 'border-box',
+                            }}
+                        />
+                        <label style={{ display: 'block', marginBottom: '5px' }}>Publisher:</label>
+                        <input
+                            type="text"
+                            value={publisher}
+                            onChange={(e) => setPublisher(e.target.value)}
+                            style={{
+                                width: '100%',
+                                padding: '10px',
+                                border: '1px solid #ccc',
+                                borderRadius: '4px',
+                                boxSizing: 'border-box',
+                            }}
+                        />
+                        <label style={{ display: 'block', marginBottom: '5px' }}>DOI:</label>
+                        <input
+                            type="text"
+                            value={DOI}
+                            onChange={(e) => setDOI(e.target.value)}
+                            style={{
+                                width: '100%',
+                                padding: '10px',
+                                border: '1px solid #ccc',
+                                borderRadius: '4px',
+                                boxSizing: 'border-box',
+                            }}
+                        />
+                    </div>
                 </div>
-                <div>
-                    <label>Author:</label>
-                    <input
-                        type="text"
-                        value={author}
-                        onChange={(e) => setAuthor(e.target.value)}
-                    />
+
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', marginTop: '20px' }}>
+                    <div style={{ flex: '1 1 45%' }}>
+                        <label style={{ display: 'block', marginBottom: '5px' }}>SE Practice:</label>
+                        <input
+                            type="text"
+                            value={SE_practice}
+                            onChange={(e) => setSEPractice(e.target.value)}
+                            style={{
+                                width: '100%',
+                                padding: '10px',
+                                border: '1px solid #ccc',
+                                borderRadius: '4px',
+                                boxSizing: 'border-box',
+                            }}
+                        />
+                    </div>
+                    <div style={{ flex: '1 1 45%' }}>
+                        <label style={{ display: 'block', marginBottom: '5px' }}>Claim:</label>
+                        <input
+                            type="text"
+                            value={claim}
+                            onChange={(e) => setClaim(e.target.value)}
+                            style={{
+                                width: '100%',
+                                padding: '10px',
+                                border: '1px solid #ccc',
+                                borderRadius: '4px',
+                                boxSizing: 'border-box',
+                            }}
+                        />
+                    </div>
+                    <div style={{ flex: '1 1 45%' }}>
+                        <label style={{ display: 'block', marginBottom: '5px' }}>Type of Participant:</label>
+                        <input
+                            type="text"
+                            value={type_of_participant}
+                            onChange={(e) => setTypeOfParticipant(e.target.value)}
+                            style={{
+                                width: '100%',
+                                padding: '10px',
+                                border: '1px solid #ccc',
+                                borderRadius: '4px',
+                                boxSizing: 'border-box',
+                            }}
+                        />
+                    </div>
+                    <div style={{ flex: '1 1 45%' }}>
+                        <label style={{ display: 'block', marginBottom: '5px' }}>Type of Research:</label>
+                        <input
+                            type="text"
+                            value={type_of_research}
+                            onChange={(e) => setTypeOfResearch(e.target.value)}
+                            style={{
+                                width: '100%',
+                                padding: '10px',
+                                border: '1px solid #ccc',
+                                borderRadius: '4px',
+                                boxSizing: 'border-box',
+                            }}
+                        />
+                    </div>
+                    <div style={{ flex: '1 1 45%' }}>
+                        <label style={{ display: 'block', marginBottom: '5px' }}>Evidence:</label>
+                        <input
+                            type="text"
+                            value={evidence}
+                            onChange={(e) => setEvidence(e.target.value)}
+                            style={{
+                                width: '100%',
+                                padding: '10px',
+                                border: '1px solid #ccc',
+                                borderRadius: '4px',
+                                boxSizing: 'border-box',
+                                resize: 'vertical',
+                            }}
+                        />
+                    </div>
                 </div>
-                <div>
-                    <label>Journal Name:</label>
-                    <input
-                        type="text"
-                        value={journal_name}
-                        onChange={(e) => setJournalName(e.target.value)}
-                    />
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
+                    <button
+                        onClick={handleSubmit}
+                        style={{
+                            padding: '10px 15px',
+                            backgroundColor: '#4CAF50',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            flex: '1',
+                            marginRight: '10px',
+                        }}
+                    >
+                        Submit
+                    </button>
+                    <button
+                        onClick={closeModal}
+                        style={{
+                            padding: '10px 15px',
+                            backgroundColor: '#f44336',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            flex: '1',
+                        }}
+                    >
+                        Cancel
+                    </button>
                 </div>
-                <div>
-                    <label>Publication Year:</label>
-                    <input
-                        type="text"
-                        value={published_year}
-                        onChange={(e) => setPublishedYear(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label>Volume Number:</label>
-                    <input
-                        type="text"
-                        value={volume_number}
-                        onChange={(e) => setVolumeNumber(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label>Pages:</label>
-                    <input
-                        type="number"
-                        value={pages ?? ""}
-                        onChange={(e) => setPages(e.target.value ? Number(e.target.value) : null)}
-                    />
-                </div>
-                <div>
-                    <label>Publisher:</label>
-                    <input
-                        type="text"
-                        value={publisher}
-                        onChange={(e) => setPublisher(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label>DOI:</label>
-                    <input
-                        type="text"
-                        value={DOI}
-                        onChange={(e) => setDOI(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label>SE Practice:</label>
-                    <input
-                        type="text"
-                        value={SE_practice}
-                        onChange={(e) => setSEPractice(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label>Claim:</label>
-                    <input
-                        type="text"
-                        value={claim}
-                        onChange={(e) => setClaim(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label>Evidence:</label>
-                    <input
-                        type="text"
-                        value={evidence}
-                        onChange={(e) => setEvidence(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label>Type of Research:</label>
-                    <input
-                        type="text"
-                        value={type_of_research}
-                        onChange={(e) => setTypeOfResearch(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label>Type of Participant:</label>
-                    <input
-                        type="text"
-                        value={type_of_participant}
-                        onChange={(e) => setTypeOfParticipant(e.target.value)}
-                    />
-                </div>
-                <button onClick={handleSubmit}>Submit</button>
-                <button onClick={closeModal}>Cancel</button>
             </Modal>
         </div>
     );
