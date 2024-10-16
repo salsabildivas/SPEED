@@ -10,7 +10,7 @@ interface ArticlesInterface {
     journal_name: string;
     published_year: string;
     volume_number: string;
-    pages: number;
+    pages: number | null;
     publisher: string;
     DOI: string;
     SE_practice: string;
@@ -28,18 +28,28 @@ type ArticlesProps = {
     articles: ArticlesInterface[];
 };
 
-const AnalystArticles: NextPage<ArticlesProps> = ({ articles }) => {
+const PublishArticles: NextPage<ArticlesProps> = ({ articles }) => {
     const [articleList, setArticleList] = useState<ArticlesInterface[]>(articles);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [selectedArticle, setSelectedArticle] = useState<ArticlesInterface | null>(null);
-    const [claim, setClaim] = useState('');
+
+    const [title, setTitle] = useState('');
+    const [author, setAuthor] = useState('');
+    const [journal_name, setJournalName] = useState('');
+    const [published_year, setPublishedYear] = useState('');
+    const [volume_number, setVolumeNumber] = useState('');
+    const [pages, setPages] = useState<number | null>(null);
+    const [publisher, setPublisher] = useState('');
+    const [DOI, setDOI] = useState('');
     const [SE_practice, setSEPractice] = useState('');
+    const [claim, setClaim] = useState('');
     const [evidence, setEvidence] = useState('');
     const [type_of_research, setTypeOfResearch] = useState('');
     const [type_of_participant, setTypeOfParticipant] = useState('');
 
     useEffect(() => {
         const fetchArticles = async () => {
+            console.log("fetching articles");
             try {
                 const res = await fetch(`http://localhost:8085/api/submissions`);
                 if (!res.ok) {
@@ -83,8 +93,16 @@ const AnalystArticles: NextPage<ArticlesProps> = ({ articles }) => {
 
     const openModal = (article: ArticlesInterface) => {
         setSelectedArticle(article);
-        setClaim(article.claim);
+        setTitle(article.title);
+        setAuthor(article.author);
+        setJournalName(article.journal_name);
+        setPublishedYear(article.published_year);
+        setVolumeNumber(article.volume_number);
+        setPages(article.pages);
+        setPublisher(article.publisher);
+        setDOI(article.DOI);
         setSEPractice(article.SE_practice);
+        setClaim(article.claim);
         setEvidence(article.evidence);
         setTypeOfResearch(article.type_of_research);
         setTypeOfParticipant(article.type_of_participant);
@@ -101,31 +119,42 @@ const AnalystArticles: NextPage<ArticlesProps> = ({ articles }) => {
 
         const updatedArticle = {
             ...selectedArticle,
-            claim,
+            title,
+            author,
+            journal_name,
+            published_year,
+            volume_number,
+            pages,
+            publisher,
+            DOI,
             SE_practice,
+            claim,
             evidence,
             type_of_research,
             type_of_participant,
         };
 
+        console.log("Updated Article:", updatedArticle);
+
         try {
-            const res = await fetch(`http://localhost:8085/api/submissions/${selectedArticle.id}`, {
-                method: "PUT",
+            // Post to published_articles
+            const postRes = await fetch(`http://localhost:8085/api/articles`, {
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(updatedArticle),
             });
 
-            if (!res.ok) {
-                const errorData = await res.json();
-                throw new Error(`Failed to update article: ${errorData.message}`);
+            if (!postRes.ok) {
+                const errorData = await postRes.json();
+                throw new Error(`Failed to publish article: ${errorData.message}`);
             }
 
-            setArticleList((prevArticles) =>
-                prevArticles.map((article) =>
-                    article.id === selectedArticle.id ? updatedArticle : article
-                )
+            console.log("Article published and removed from submissions");
+
+            setArticleList(prevArticles =>
+                prevArticles.filter(article => article.id !== selectedArticle.id)
             );
 
             closeModal();
@@ -157,19 +186,83 @@ const AnalystArticles: NextPage<ArticlesProps> = ({ articles }) => {
             >
                 <h2>Review & Publish</h2>
                 <div>
+                    <label>Title:</label>
+                    <input
+                        type="text"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                    />
+                </div>
+                <div>
+                    <label>Author:</label>
+                    <input
+                        type="text"
+                        value={author}
+                        onChange={(e) => setAuthor(e.target.value)}
+                    />
+                </div>
+                <div>
+                    <label>Journal Name:</label>
+                    <input
+                        type="text"
+                        value={journal_name}
+                        onChange={(e) => setJournalName(e.target.value)}
+                    />
+                </div>
+                <div>
+                    <label>Publication Year:</label>
+                    <input
+                        type="text"
+                        value={published_year}
+                        onChange={(e) => setPublishedYear(e.target.value)}
+                    />
+                </div>
+                <div>
+                    <label>Volume Number:</label>
+                    <input
+                        type="text"
+                        value={volume_number}
+                        onChange={(e) => setVolumeNumber(e.target.value)}
+                    />
+                </div>
+                <div>
+                    <label>Pages:</label>
+                    <input
+                        type="number"
+                        value={pages ?? ""}
+                        onChange={(e) => setPages(e.target.value ? Number(e.target.value) : null)}
+                    />
+                </div>
+                <div>
+                    <label>Publisher:</label>
+                    <input
+                        type="text"
+                        value={publisher}
+                        onChange={(e) => setPublisher(e.target.value)}
+                    />
+                </div>
+                <div>
+                    <label>DOI:</label>
+                    <input
+                        type="text"
+                        value={DOI}
+                        onChange={(e) => setDOI(e.target.value)}
+                    />
+                </div>
+                <div>
+                    <label>SE Practice:</label>
+                    <input
+                        type="text"
+                        value={SE_practice}
+                        onChange={(e) => setSEPractice(e.target.value)}
+                    />
+                </div>
+                <div>
                     <label>Claim:</label>
                     <input
                         type="text"
                         value={claim}
                         onChange={(e) => setClaim(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label>Engineering Practice:</label>
-                    <input
-                        type="text"
-                        value={SE_practice}
-                        onChange={(e) => setSEPractice(e.target.value)}
                     />
                 </div>
                 <div>
@@ -239,4 +332,4 @@ export const getStaticProps: GetStaticProps<ArticlesProps> = async () => {
     };
 };
 
-export default AnalystArticles;
+export default PublishArticles;
