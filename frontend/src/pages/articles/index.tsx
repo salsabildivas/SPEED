@@ -1,5 +1,5 @@
 import { GetStaticProps, NextPage } from "next";
-import SortableTable from "../../components/table/SortableTable";
+import ArticleTable from "@/components/table/articleTable";
 
 interface ArticlesInterface {
   id: string;
@@ -10,7 +10,7 @@ interface ArticlesInterface {
   volume_number: string;
   pages: number;
   publisher: string;
-  DOI: string;
+  doi: string;
   SE_practice: string;
   claim: string;
   evidence: string;
@@ -24,6 +24,7 @@ type ArticlesProps = {
 
 const Articles: NextPage<ArticlesProps> = ({ articles }) => {
   const headers: { key: keyof ArticlesInterface; label: string }[] = [
+    //{ key: "id", label: "id" },
     { key: "title", label: "Title" },
     { key: "author", label: "Author" },
     { key: "journal_name", label: "Journal Name"},
@@ -31,7 +32,7 @@ const Articles: NextPage<ArticlesProps> = ({ articles }) => {
     //{ key: "volume_number", label: "Volume Number"},
     //{ key: "pages", label: "Total pages"},
     //{ key: "publisher", label: "Publisher"},
-    //{ key: "DOI", label:"DOI"},
+    //{ key: "doi", label:"doi"},
     { key: "SE_practice", label:"Software Engineering Practice"},
     { key:"claim", label:"Claim"},
     { key:"evidence", label:"Evidence"},
@@ -43,7 +44,7 @@ const Articles: NextPage<ArticlesProps> = ({ articles }) => {
     <div className="container">
       <h1>Articles Index Page</h1>
       <p>Page containing a table of articles:</p>
-      <SortableTable headers={headers} data={articles} />
+      <ArticleTable headers={headers} data={articles} />
     </div>
   );
 };
@@ -69,13 +70,14 @@ export const getStaticProps: GetStaticProps<ArticlesProps> = async () => {
       volume_number: article.volume_number,
       pages: article.pages,
       publisher: article.publisher,
-      DOI: article.doi,
+      doi: article.doi,
       SE_practice: article.SE_practice,
       claim: article.claim,
       evidence: article.evidence,
       type_of_research: article.type_of_research,
       type_of_participant: article.type_of_participant,
     }));
+    
   } catch (error) {
     console.error("Error fetching articles:", error);
   }

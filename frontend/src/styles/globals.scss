@@ -64,3 +64,59 @@
 .reject-button:hover:not(.disabled) {
   background-color: #c9302c;
 }
+
+/* Table stylings */
+table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  width: auto;
+  overflow: hidden;
+  word-wrap: break-word;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  border-bottom: 2px solid #ddd;
+}
+
+td {
+  border-bottom: 1px solid #ddd;
+}
+
+.pagination-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.pagination-button {
+  padding: 8px 12px;
+  background-color: #4c72af;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.pagination-button:hover {
+  background-color: #4669a1;
+}
+
+.pagination-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.pagination-info {
+  font-size: 16px;
+  color: #333333;
+}
