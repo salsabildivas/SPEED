@@ -7,14 +7,13 @@ interface ArticleTableProps {
     data: any[];
 }
 
-const ArticleTable: React.FC<ArticleTableProps> = ({ headers, data}) => {
+const ArticleTable: React.FC<ArticleTableProps> = ({ headers, data }) => {
     const [sortedData, setSortedData] = useState(data);
     const [sortConfig, setSortConfig] = useState<{ key: string; direction: boolean } | null>(null);
+    const [searchQuery, setSearchQuery] = useState(""); // State for search input
 
     const router = useRouter();
-
-    let ids: String[] = data.map(id => id.id)
-
+    let ids: String[] = data.map(id => id.id);
 
     useEffect(() => {
         setSortedData(data); // Update sortedData when data prop changes
@@ -30,28 +29,57 @@ const ArticleTable: React.FC<ArticleTableProps> = ({ headers, data}) => {
         setSortConfig({ key, direction });
     };
 
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery(e.target.value); // Update the search query
+    };
+
+    // Filter the data based on the search query
+    const filteredData = sortedData.filter((row) =>
+        headers.some((header) =>
+            row[header.key]?.toString().toLowerCase().includes(searchQuery.toLowerCase())
+        )
+    );
+
     return (
-        <table>
-            <thead>
-                <tr>
-                    {headers.map((header) => (
-                        <th key={header.key} onClick={() => handleSort(header.key)}>
-                            {header.label}
-                            {sortConfig?.key === header.key ? (sortConfig.direction ? " ▲" : " ▼") : ""}
-                        </th>
-                    ))}
-                </tr>
-            </thead>
-            <tbody>
-                {sortedData.map((row, i) => (
-                    <tr key={i} onClick={() => router.push(`/articles/${ids[i]}`)}>
+        <div>
+            {/* Search Input */}
+            <input
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={handleSearchChange}
+                className="form-control mb-3"
+            />
+            <table>
+                <thead>
+                    <tr>
                         {headers.map((header) => (
-                            <td key={header.key}>{row[header.key]}</td>
+                            <th key={header.key} onClick={() => handleSort(header.key)}>
+                                {header.label}
+                                {sortConfig?.key === header.key ? (sortConfig.direction ? " ▲" : " ▼") : ""}
+                            </th>
                         ))}
                     </tr>
-                ))}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {filteredData.length > 0 ? (
+                        filteredData.map((row, i) => (
+                            <tr key={i} onClick={() => router.push(`/articles/${ids[i]}`)}>
+                                {headers.map((header) => (
+                                    <td key={header.key}>{row[header.key]}</td>
+                                ))}
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan={headers.length} className="text-center">
+                                No articles match your search.
+                            </td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
+        </div>
     );
 };
 
