@@ -2,11 +2,16 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { DefaultEmptyPublishedArticle, PublishedArticle } from "../publishedArticle";
+import {
+  DefaultEmptyPublishedArticle,
+  PublishedArticle,
+} from "../publishedArticle";
 import Link from "next/link";
 
 function ShowArticleDetails() {
-  const [article, setArticle] = useState<PublishedArticle>(DefaultEmptyPublishedArticle);
+  const [article, setArticle] = useState<PublishedArticle>(
+    DefaultEmptyPublishedArticle
+  );
   const id = useParams<{ id: string }>().id;
   const navigate = useRouter();
   useEffect(() => {
@@ -96,20 +101,19 @@ function ShowArticleDetails() {
         <div className="row">
           <div className="col-md-10 m-auto">
             <br /> <br />
-            <Link href="/articles" className="btn btn-outline-warning float-left">
-              Return
+            <Link href="/articles">
+              <a className="btn btn-outline-warning float-left">Return</a>
             </Link>
           </div>
           <br />
           <div className="col-md-8 m-auto">
-            <h1 className="display-4 text-center">Article&quot;s Record</h1>
-            <p className="lead text-center">Article's Rating</p>
+            <h1 className="display-4 text-center">Article&apos;s Record</h1>
+            <p className="lead text-center">Article&apos;s Rating</p>
             <div className="col-md-10 m-auto">"Rating"</div>
             <hr /> <br />
           </div>
           <div className="col-md-10 m-auto">{BookItem}</div>
-          <div className="col-md-6 m-auto">
-          </div>
+          <div className="col-md-6 m-auto"></div>
         </div>
       </div>
     </div>
