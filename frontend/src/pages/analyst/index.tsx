@@ -12,7 +12,7 @@ interface ArticlesInterface {
     volume_number: string;
     pages: number | null;
     publisher: string;
-    DOI: string;
+    doi: string;
     SE_practice: string;
     claim: string;
     evidence: string;
@@ -40,7 +40,7 @@ const PublishArticles: NextPage<ArticlesProps> = ({ articles }) => {
     const [volume_number, setVolumeNumber] = useState('');
     const [pages, setPages] = useState<number | null>(null);
     const [publisher, setPublisher] = useState('');
-    const [DOI, setDOI] = useState('');
+    const [doi, setDOI] = useState('');
     const [SE_practice, setSEPractice] = useState('');
     const [claim, setClaim] = useState('');
     const [evidence, setEvidence] = useState('');
@@ -65,7 +65,7 @@ const PublishArticles: NextPage<ArticlesProps> = ({ articles }) => {
                     volume_number: article.volume_number,
                     pages: article.pages,
                     publisher: article.publisher,
-                    DOI: article.DOI,
+                    doi: article.doi,
                     SE_practice: article.SE_practice || "",
                     claim: article.claim || "",
                     evidence: article.evidence || "",
@@ -87,7 +87,7 @@ const PublishArticles: NextPage<ArticlesProps> = ({ articles }) => {
         { key: "published_year", label: "Publication Year" },
         { key: "volume_number", label: "Volume" },
         { key: "pages", label: "Pages" },
-        { key: "DOI", label: "DOI" },
+        { key: "doi", label: "doi" },
         { key: "actions", label: "Actions" },
     ];
 
@@ -100,7 +100,7 @@ const PublishArticles: NextPage<ArticlesProps> = ({ articles }) => {
         setVolumeNumber(article.volume_number);
         setPages(article.pages);
         setPublisher(article.publisher);
-        setDOI(article.DOI);
+        setDOI(article.doi);
         setSEPractice(article.SE_practice);
         setClaim(article.claim);
         setEvidence(article.evidence);
@@ -126,7 +126,7 @@ const PublishArticles: NextPage<ArticlesProps> = ({ articles }) => {
             volume_number,
             pages,
             publisher,
-            DOI,
+            doi,
             SE_practice,
             claim,
             evidence,
@@ -191,7 +191,7 @@ const PublishArticles: NextPage<ArticlesProps> = ({ articles }) => {
                         bottom: 'auto',
                         transform: 'translate(-50%, -50%)',
                         width: '100%',
-                        maxWidth: '1200px',  // Adjust width as necessary
+                        maxWidth: '1200px',
                         padding: '20px',
                         borderRadius: '8px',
                         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
@@ -305,7 +305,7 @@ const PublishArticles: NextPage<ArticlesProps> = ({ articles }) => {
                         <label style={{ display: 'block', marginBottom: '5px' }}>DOI:</label>
                         <input
                             type="text"
-                            value={DOI}
+                            value={doi}
                             onChange={(e) => setDOI(e.target.value)}
                             style={{
                                 width: '100%',

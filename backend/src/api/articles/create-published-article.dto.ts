@@ -6,7 +6,7 @@ export class CreateArticleDto {
   volume_number: string;
   pages: number;
   publisher: string;
-  DOI: string;
+  doi: string;
   SE_practice: string;
   claim: string;
   evidence: string;

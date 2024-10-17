@@ -22,7 +22,7 @@ export class Published_Article {
   @Prop()
   publisher: string;
   @Prop()
-  DOI: string;
+  doi: string;
   @Prop({ required: true })
   SE_practice: string;
   @Prop()
