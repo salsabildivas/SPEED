@@ -109,7 +109,7 @@ function ShowArticleDetails() {
           <div className="col-md-8 m-auto">
             <h1 className="display-4 text-center">Article&apos;s Record</h1>
             <p className="lead text-center">Article&apos;s Rating</p>
-            <div className="col-md-10 m-auto">"Rating"</div>
+            <div className="col-md-10 m-auto">Rating</div>
             <hr /> <br />
           </div>
           <div className="col-md-10 m-auto">{BookItem}</div>
