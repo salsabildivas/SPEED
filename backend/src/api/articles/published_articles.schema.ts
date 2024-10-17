@@ -20,7 +20,9 @@ export class Published_Article {
   @Prop()
   pages: number;
   @Prop()
-  DOI: string;
+  publisher: string;
+  @Prop()
+  doi: string;
   @Prop({ required: true })
   SE_practice: string;
   @Prop()
