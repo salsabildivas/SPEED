@@ -25,7 +25,7 @@ export class ArticleService {
   }
   async update(id: string, createArticleDto: CreateArticleDto) {
     return await this.articleModel
-      .findByIdAndUpdate(id, createArticleDto)
+      .findByIdAndUpdate(id, createArticleDto, { new: true })
       .exec();
   }
   async deleteArticle(id: string) {
