@@ -10,12 +10,19 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "paths": {
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "src/tests/ModeratorArticles.test.jsx",
+    "src/tests/SortableTable.test.jsx",
+    "src/jest.d.ts"
+  ],
   "exclude": ["node_modules"]
 }
