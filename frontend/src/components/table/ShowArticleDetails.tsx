@@ -15,7 +15,7 @@ function ShowArticleDetails() {
   const id = useParams<{ id: string }>().id;
   const navigate = useRouter();
   useEffect(() => {
-    fetch(`http://localhost:8085/api/articles/${id}`)
+    fetch(`speedbackend-gilt.vercel.app/api/articles/${id}`)
       .then((res) => {
         return res.json();
       })
