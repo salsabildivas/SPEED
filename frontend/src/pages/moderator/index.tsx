@@ -26,7 +26,7 @@ const ModeratorArticles: NextPage<ArticlesProps> = ({ articles }) => {
     useEffect(() => {
         const fetchArticles = async () => {
             try {
-                const res = await fetch(`http://speedbackend2.vercel.app/api/submissions`);
+                const res = await fetch(`https://speedbackend2.vercel.app/api/submissions`);
                 if (!res.ok) {
                     throw new Error("Failed to fetch articles");
                 }
