@@ -87,7 +87,7 @@ const NewDiscussion = () => {
   
     console.log("Submitting article...", articleToSubmit);
     try {
-      const response = await fetch("http://localhost:8085/api/submissions", {
+      const response = await fetch("https://speedbackend2.vercel.app/api/submissions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(articleToSubmit),

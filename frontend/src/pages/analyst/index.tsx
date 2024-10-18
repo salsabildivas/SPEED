@@ -51,7 +51,7 @@ const PublishArticles: NextPage<ArticlesProps> = ({ articles }) => {
         const fetchArticles = async () => {
             console.log("fetching articles");
             try {
-                const res = await fetch(`http://localhost:8085/api/submissions`);
+                const res = await fetch(`http://speedbackend2.vercel.app/api/submissions`);
                 if (!res.ok) {
                     throw new Error("Failed to fetch articles");
                 }
@@ -138,7 +138,7 @@ const PublishArticles: NextPage<ArticlesProps> = ({ articles }) => {
 
         try {
             // Post to published_articles
-            const postRes = await fetch(`http://localhost:8085/api/articles`, {
+            const postRes = await fetch(`http://speedbackend2.vercel.app/api/articles`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -437,7 +437,7 @@ export const getStaticProps: GetStaticProps<ArticlesProps> = async () => {
     let articles: ArticlesInterface[] = [];
 
     try {
-        const res = await fetch("http://localhost:8085/api/submissions");
+        const res = await fetch("http://speedbackend2.vercel.app/api/submissions");
         if (!res.ok) {
             throw new Error("Failed to fetch articles");
         }

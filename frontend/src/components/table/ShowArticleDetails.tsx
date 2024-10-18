@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
+import { useRouter } from "next/router";
 import {
   DefaultEmptyPublishedArticle,
   PublishedArticle,
@@ -12,10 +13,10 @@ function ShowArticleDetails() {
   const [article, setArticle] = useState<PublishedArticle>(
     DefaultEmptyPublishedArticle
   );
-  const id = useParams<{ id: string }>().id;
-  const navigate = useRouter();
+  const router = useRouter();
+  const { id } = router.query;
   useEffect(() => {
-    fetch(`speedbackend-gilt.vercel.app/api/articles/${id}`)
+    fetch(`http://speedbackend2.vercel.app/api/articles/${id}`)
       .then((res) => {
         return res.json();
       })
