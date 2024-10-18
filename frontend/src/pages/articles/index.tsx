@@ -54,7 +54,7 @@ export const getStaticProps: GetStaticProps<ArticlesProps> = async () => {
   let articles: ArticlesInterface[] = [];
 
   try {
-    const res = await fetch("http://localhost:8085/api/articles");
+    const res = await fetch("http://speedbackend2.vercel.app/api/articles");
     if (!res.ok) {
       throw new Error("Failed to fetch articles");
     }

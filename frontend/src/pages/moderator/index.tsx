@@ -26,7 +26,7 @@ const ModeratorArticles: NextPage<ArticlesProps> = ({ articles }) => {
     useEffect(() => {
         const fetchArticles = async () => {
             try {
-                const res = await fetch(`http://localhost:8085/api/submissions`);
+                const res = await fetch(`http://speedbackend2.vercel.app/api/submissions`);
                 if (!res.ok) {
                     throw new Error("Failed to fetch articles");
                 }
@@ -74,7 +74,7 @@ const ModeratorArticles: NextPage<ArticlesProps> = ({ articles }) => {
 
     const updateArticleStatus = async (id: string, newStatus: string) => {
         try {
-            const res = await fetch(`http://localhost:8085/api/submissions/${id}`, {
+            const res = await fetch(`http://speedbackend2.vercel.app/api/submissions/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -102,7 +102,7 @@ const ModeratorArticles: NextPage<ArticlesProps> = ({ articles }) => {
     const rejectArticle = async (article: ArticlesInterface) => {
         try {
             // Update the article's status to "rejected"
-            const statusUpdateRes = await fetch(`http://localhost:8085/api/submissions/${article.id}`, {
+            const statusUpdateRes = await fetch(`http://speedbackend2.vercel.app/api/submissions/${article.id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ status: "rejected" }),
@@ -114,7 +114,7 @@ const ModeratorArticles: NextPage<ArticlesProps> = ({ articles }) => {
             }
     
             // Add the article to the rejected database
-            const response = await fetch("http://localhost:8085/api/rejected", {
+            const response = await fetch("http://speedbackend2.vercel.app/api/rejected", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(article),
