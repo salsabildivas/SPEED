@@ -16,7 +16,7 @@ function ShowArticleDetails() {
   const router = useRouter();
   const { id } = router.query;
   useEffect(() => {
-    fetch(`http://speedbackend2.vercel.app/api/articles/${id}`)
+    fetch(`https://speedbackend2.vercel.app/api/articles/${id}`)
       .then((res) => {
         return res.json();
       })
