@@ -59,35 +59,40 @@ function ShowArticleDetails() {
           <tr>
             <th scope="row">6</th>
             <td>Publisher</td>
-            <td>{article.publisher}</td>
+            <td>{article.pages}</td>
           </tr>
           <tr>
             <th scope="row">7</th>
+            <td>Publisher</td>
+            <td>{article.publisher}</td>
+          </tr>
+          <tr>
+            <th scope="row">8</th>
             <td>DOI</td>
             <td>{article.doi}</td>
           </tr>
           <tr>
-            <th scope="row">8</th>
+            <th scope="row">9</th>
             <td>SE Practice</td>
             <td>{article.SE_practice}</td>
           </tr>
           <tr>
-            <th scope="row">9</th>
+            <th scope="row">10</th>
             <td>Claim</td>
             <td>{article.claim}</td>
           </tr>
           <tr>
-            <th scope="row">10</th>
+            <th scope="row">11</th>
             <td>Evidence</td>
             <td>{article.evidence}</td>
           </tr>
           <tr>
-            <th scope="row">11</th>
+            <th scope="row">12</th>
             <td>Type of Research</td>
             <td>{article.type_of_research}</td>
           </tr>
           <tr>
-            <th scope="row">12</th>
+            <th scope="row">13</th>
             <td>Type of Participant</td>
             <td>{article.type_of_participant}</td>
           </tr>
