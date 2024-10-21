@@ -8,7 +8,7 @@ interface ArticlesInterface {
   journal_name: string;
   published_year: string;
   volume_number: string;
-  pages: number;
+  pages: string;
   publisher: string;
   doi: string;
   SE_practice: string;
